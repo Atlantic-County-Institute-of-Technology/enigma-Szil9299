@@ -6,12 +6,22 @@
 # last update:  MM.DD.YYYY
 import random
 
-# we'll be using this string for the majority of our translations
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 
 # user inputs a message and selects a key (or random), the message is then translated using the cipher
 def encode_message():
-    pass
+    message = input("Enter the message to encode: ").lower()
+    key = int(input("Enter the key (1-25): "))
+    encoded_message = ""
+
+    for char in message:
+        if char in alphabet:
+            new_index = (alphabet.index(char) + key) % 26
+            encoded_message += alphabet[new_index]
+        else:
+            encoded_message += char
+
+    print(f"Encoded message: {encoded_message}")
 
 # encodes a target file, similarly to encode_message, except now targeting a filename
 def encode_file():
@@ -25,7 +35,6 @@ def decode_file():
 # runs if the key is unknown. If this is true, print out all possible decoding combinations.
 def decode_unknown_key(filename):
    pass
-
 
 # main method declaration
 def main():
