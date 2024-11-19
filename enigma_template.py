@@ -4,6 +4,7 @@
 # author: YOUR_NAME_HERE
 # created: MM.DD.YYYY
 # last update:  MM.DD.YYYY
+
 import random
 
 alphabet = "abcdefghijklmnopqrstuvwxyz"
@@ -25,7 +26,28 @@ def encode_message():
 
 # encodes a target file, similarly to encode_message, except now targeting a filename
 def encode_file():
-    pass
+    filename = input("Enter the filename to encode: ")
+    key = int(input("Enter the key (1-25): "))
+
+    try:
+        with open(filename, 'r') as file:
+            content = file.read().lower()
+
+        encoded_content = ""
+        for char in content:
+            if char in alphabet:
+                new_index = (alphabet.index(char) + key) % 26
+                encoded_content += alphabet[new_index]
+            else:
+                encoded_content += char
+
+        with open(f"encoded_{filename}", 'w') as file:
+            file.write(encoded_content)
+
+        print(f"File encoded successfully. Encoded file saved as 'encoded_{filename}'")
+
+    except FileNotFoundError:
+        print("File not found. Please check the filename and try again.")
 
 # decodes target file using a user-specified key. If key is unknown, a keypress should
 # call decode_unknown_key()
