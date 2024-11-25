@@ -9,7 +9,7 @@ import random
 
 alphabet = "abcdefghijklmnopqrstuvwxyz"
 
-# user inputs a message and selects a key (or random), the message is then translated using the cipher
+# user inputs a message and selects a key (or random), the message is then translated using math
 def encode_message():
     message = input("Enter the message to encode: ").lower()
     key = int(input("Enter the key (1-25): "))
@@ -52,11 +52,49 @@ def encode_file():
 # decodes target file using a user-specified key. If key is unknown, a keypress should
 # call decode_unknown_key()
 def decode_file():
-    pass
+    filename = input("Enter the filename to decode: ")
+    key = int(input("Enter the key (1-25): "))
+
+    try:
+        with open(filename, 'r') as file:
+            content = file.read().lower()
+
+        decoded_content = ""
+        for char in content:
+            if char in alphabet:
+                new_index = (alphabet.index(char) - key) % 26
+                decoded_content += alphabet[new_index]
+            else:
+                decoded_content += char
+
+        with open(f"decoded_{filename}", 'w') as file:
+            file.write(decoded_content)
+
+        print(f"File decoded successfully. Decoded file saved as 'decoded_{filename}'")
+
+    except FileNotFoundError:
+        print("File not found. Please check the filename and try again.")
 
 # runs if the key is unknown. If this is true, print out all possible decoding combinations.
-def decode_unknown_key(filename):
-   pass
+def decode_unknown_key():
+    try:
+        filename = input("Enter the filename to decode: ")
+        with open(filename, 'r') as file:
+            content = file.read().lower()
+
+        for key in range(1, 26):
+            decoded_content = ""
+            for char in content:
+                if char in alphabet:
+                    new_index = (alphabet.index(char) - key) % 26
+                    decoded_content += alphabet[new_index]
+                else:
+                    decoded_content += char
+
+            print(f"Key {key}: {decoded_content}")
+
+    except FileNotFoundError:
+        print("File not found. Please check the filename and try again.")
 
 # main method declaration
 def main():
@@ -66,6 +104,7 @@ def main():
               f"[1]: Encode a custom message.\n"
               f"[2]: Encode file.\n"
               f"[3]: Decode file.\n"
+              f"[3.5] Decode unknown key\n"
               f"[4]: Exit.")
 
         selection = input("Choose an option:")
@@ -76,6 +115,8 @@ def main():
             encode_file()
         elif selection == "3":
             decode_file()
+        elif selection == "3.5":
+            decode_unknown_key()
         elif selection == "4":
             print("Goodbye.")
             exit()
